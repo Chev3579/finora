@@ -1,0 +1,124 @@
+:root {
+  --fd: "Source Serif 4", "Noto Serif Thai", Georgia, serif;
+  --ft: "Noto Serif Thai", "Source Serif 4", Georgia, serif;
+  --blur: 22px;
+  --ga: 0.055;
+  --spec: 1;
+
+  --bg: #100f0f;
+  --ink: #f7f4f3;
+  --ink2: #a9a4a3;
+  --ink3: #736e6d;
+
+  --gl: rgba(255, 255, 255, var(--ga));
+  --gl2: rgba(255, 255, 255, calc(var(--ga) * 1.9));
+  --ge: rgba(255, 255, 255, 0.11);
+  --bd: 1px solid var(--ge);
+  --bf: blur(var(--blur)) saturate(1.6);
+  --gs: 0 14px 34px rgba(0, 0, 0, 0.46), inset 0 1px 0 rgba(255, 255, 255, calc(0.24 * var(--spec))),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.045);
+  --gs2: 0 4px 14px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, calc(0.16 * var(--spec)));
+
+  --cy: #62c5ee;
+  --cyd: #38a6cf;
+  --mg: #ff458e;
+  --mg2: #ff90b1;
+  --yl: #edbb00;
+
+  --hair: rgba(255, 255, 255, 0.09);
+  --hole: rgba(20, 19, 18, 0.74);
+  --page: #141312;
+  --pink: rgba(255, 69, 142, 0.09);
+  --blue: rgba(98, 197, 238, 0.1);
+}
+
+body[data-theme="light"] {
+  --bg: #e6e3e1;
+  --ink: #201e1d;
+  --ink2: #605d5d;
+  --ink3: #8e8a89;
+
+  --gl: rgba(255, 255, 255, calc(0.52 + var(--ga)));
+  --gl2: rgba(255, 255, 255, calc(0.78 + var(--ga)));
+  --ge: rgba(255, 255, 255, 0.85);
+
+  --gs: 0 14px 30px rgba(45, 43, 43, 0.14), inset 0 1px 0 rgba(255, 255, 255, calc(0.95 * var(--spec))),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.5);
+  --gs2: 0 3px 10px rgba(45, 43, 43, 0.1), inset 0 1px 0 rgba(255, 255, 255, calc(0.8 * var(--spec)));
+
+  --cy: #0088b0;
+  --cyd: #006786;
+  --mg: #d6006c;
+  --mg2: #aa0b56;
+
+  --hair: rgba(32, 30, 29, 0.11);
+  --hole: rgba(255, 255, 255, 0.8);
+  --page: #dddad7;
+  --pink: rgba(214, 0, 108, 0.1);
+  --blue: rgba(0, 136, 176, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--ft);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--cy);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--cyd);
+}
+
+button {
+  font-family: inherit;
+}
+
+::selection {
+  background: rgba(98, 197, 238, 0.28);
+}
+
+@keyframes gl-sweep {
+  0% {
+    transform: translateX(-140%) rotate(14deg);
+  }
+  55% {
+    transform: translateX(360%) rotate(14deg);
+  }
+  100% {
+    transform: translateX(360%) rotate(14deg);
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
