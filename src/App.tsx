@@ -6,16 +6,33 @@ import { AddTransaction } from "./pages/AddTransaction";
 import { Budget } from "./pages/Budget";
 import { Dashboard } from "./pages/Dashboard";
 import { Home } from "./pages/Home";
+import { Login } from "./pages/Login";
 import { Onboarding } from "./pages/Onboarding";
 import { Pricing } from "./pages/Pricing";
 import { Settings } from "./pages/Settings";
 import { TransactionList } from "./pages/TransactionList";
 import { NAV_ITEMS } from "./data/categories";
 
+function Splash({ message }: { message: string }) {
+  return (
+    <div className="app-shell">
+      <div className="screen screen--tint-a" style={{ display: "grid", placeItems: "center" }}>
+        <span style={{ font: "500 13px/1.6 var(--ft)", color: "var(--ink3)", padding: "0 32px", textAlign: "center" }}>
+          {message}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function Shell() {
-  const { onboarded } = useApp();
+  const { authenticated, onboarded, loading, error } = useApp();
   const { pathname } = useLocation();
   const showNav = NAV_ITEMS.some((item) => item.path === pathname);
+
+  if (!authenticated) return <Login />;
+  if (loading) return <Splash message="กำลังโหลดข้อมูล…" />;
+  if (error && !onboarded) return <Splash message={error} />;
 
   if (!onboarded && pathname !== "/onboarding") return <Navigate to="/onboarding" replace />;
 

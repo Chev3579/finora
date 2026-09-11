@@ -1,8 +1,5 @@
 import { createContext } from "react";
-import { SEED_BUDGETS, SEED_TAGS, SEED_TRANSACTIONS } from "../data/seed";
 import type { CategoryBudget, Lang, PlanKey, Theme, Transaction } from "../types";
-
-export const STORAGE_KEY = "finora.state.v1";
 
 export interface AppState {
   theme: Theme;
@@ -12,19 +9,37 @@ export interface AppState {
   transactions: Transaction[];
   budgets: CategoryBudget[];
   tags: string[];
+  loading: boolean;
+  error: string | null;
 }
 
 export const initialState: AppState = {
   theme: "dark",
   lang: "TH",
-  plan: "gold",
+  plan: "free",
   onboarded: false,
-  transactions: SEED_TRANSACTIONS,
-  budgets: SEED_BUDGETS,
-  tags: SEED_TAGS,
+  transactions: [],
+  budgets: [],
+  tags: [],
+  loading: true,
+  error: null,
 };
 
+export interface HydratePayload {
+  theme: Theme;
+  lang: Lang;
+  plan: PlanKey;
+  onboarded: boolean;
+  transactions: Transaction[];
+  budgets: CategoryBudget[];
+  tags: string[];
+}
+
 export type Action =
+  | { type: "hydrate"; data: HydratePayload }
+  | { type: "loading" }
+  | { type: "error"; message: string | null }
+  | { type: "reset" }
   | { type: "setTheme"; theme: Theme }
   | { type: "setLang"; lang: Lang }
   | { type: "setPlan"; plan: PlanKey }
@@ -35,6 +50,14 @@ export type Action =
 
 export function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
+    case "hydrate":
+      return { ...state, ...action.data, loading: false, error: null };
+    case "loading":
+      return { ...state, loading: true };
+    case "error":
+      return { ...state, error: action.message, loading: false };
+    case "reset":
+      return { ...initialState, loading: false };
     case "setTheme":
       return { ...state, theme: action.theme };
     case "setLang":
@@ -52,17 +75,9 @@ export function reducer(state: AppState, action: Action): AppState {
   }
 }
 
-export function loadState(): AppState {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return initialState;
-    return { ...initialState, ...(JSON.parse(raw) as Partial<AppState>) };
-  } catch {
-    return initialState;
-  }
-}
-
 export interface AppContextValue extends AppState {
+  authenticated: boolean;
+  email: string | null;
   toggleTheme: () => void;
   setLang: (lang: Lang) => void;
   setPlan: (plan: PlanKey) => void;
@@ -70,6 +85,7 @@ export interface AppContextValue extends AppState {
   addTransaction: (tx: Omit<Transaction, "id">) => void;
   addTag: (tag: string) => void;
   removeTag: (tag: string) => void;
+  signOut: () => void;
 }
 
 export const AppContext = createContext<AppContextValue | null>(null);

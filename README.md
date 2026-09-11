@@ -1,20 +1,37 @@
 # Finora — แอปจดรายรับรายจ่าย
 
-Implementation of the Liquid Glass mobile design exported from Claude Design
-(`../project/Liquid Glass App.dc.html`). React + TypeScript + Vite, no backend —
-state lives in `localStorage`.
+Implementation of the Liquid Glass mobile design exported from Claude Design.
+React + TypeScript + Vite, with Supabase for auth and storage.
 
-## Run
+## Setup
+
+1. Create a project at [supabase.com](https://supabase.com).
+2. Open **SQL Editor** and run [`supabase/schema.sql`](supabase/schema.sql).
+3. Copy `.env.example` to `.env` and fill in the two values from
+   **Project Settings → API**.
 
 ```sh
 npm install
 npm run dev      # http://localhost:5173
 npm run build    # type-check + production build
-npm run lint
 ```
 
 The layout is mobile-first and capped at 460px; open the browser in a phone
 viewport for the intended experience.
+
+## Deploy (Cloudflare Pages)
+
+Connect the repo, then set:
+
+| Setting | Value |
+| --- | --- |
+| Build command | `npm run build` |
+| Output directory | `dist` |
+| Environment variables | `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` |
+
+`public/_redirects` sends every path to `index.html` so client-side routes
+survive a refresh. After the first deploy, add the Pages URL to Supabase under
+**Authentication → URL Configuration** so confirmation emails link back to it.
 
 ## Screens
 
@@ -36,16 +53,21 @@ The prototype drove every screen from fixed mock tables (`RANGE`, `SERIES`,
 transaction list is the source of truth: totals, the trend chart, the donut and
 budget progress are all derived from it, so saving an entry updates every screen.
 
-Seed data matches the prototype's transactions (September 2569 / 2026). Clearing
-site data resets to it.
+A new account starts with the prototype's default budgets and tags, but no
+transactions — those are the user's own data.
+
+Every row is scoped to `auth.uid()` by row-level security, so one account can
+never read another's. Writes paint locally first and reload from the server if
+the write is rejected.
 
 ## Structure
 
 ```
 src/
   components/   glass primitives, charts, nav, sheet
-  context/      store (reducer + persistence), provider, hook
-  data/         categories, plans, slides, seed data
+  context/      store (reducer), provider, hook
+  data/         categories, plans, slides, default budgets and tags
+  lib/          Supabase client and queries
   pages/        one file per screen
   styles/       design tokens (theme.css) + component classes
   utils/        money, Thai/Buddhist-era dates, selectors

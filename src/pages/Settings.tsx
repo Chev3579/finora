@@ -1,4 +1,4 @@
-import { CaretRight, Moon, PresentationChart, Sun, User } from "@phosphor-icons/react";
+import { CaretRight, Moon, PresentationChart, SignOut, Sun, User } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 import { Screen } from "../components/Screen";
 import { useApp } from "../context/useApp";
@@ -21,7 +21,7 @@ const rowStyle: React.CSSProperties = {
 
 export function Settings() {
   const navigate = useNavigate();
-  const { theme, toggleTheme, plan } = useApp();
+  const { theme, toggleTheme, plan, email, signOut } = useApp();
   const current = planByKey(plan);
   const dark = theme === "dark";
 
@@ -45,7 +45,7 @@ export function Settings() {
           <User weight="duotone" size={22} />
         </div>
         <div style={{ flex: 1 }}>
-          <div style={{ font: "600 15px/1.2 var(--ft)", color: "var(--ink)" }}>พี่มนุษย์</div>
+          <div style={{ font: "600 15px/1.2 var(--ft)", color: "var(--ink)", wordBreak: "break-all" }}>{email}</div>
           <div style={{ font: "400 12px/1.3 var(--ft)", color: "var(--ink3)", marginTop: 4 }}>แผน{current.label}</div>
         </div>
         <div
@@ -81,6 +81,11 @@ export function Settings() {
         <PresentationChart weight="duotone" size={20} color="var(--cy)" />
         <span style={{ flex: 1, font: "500 13.5px/1 var(--ft)", color: "var(--ink)", textAlign: "left" }}>ดูแนะนำแอปอีกครั้ง</span>
         <CaretRight weight="duotone" size={15} color="var(--ink3)" />
+      </button>
+
+      <button type="button" style={rowStyle} onClick={signOut}>
+        <SignOut weight="duotone" size={20} color="var(--mg)" />
+        <span style={{ flex: 1, font: "500 13.5px/1 var(--ft)", color: "var(--ink)", textAlign: "left" }}>ออกจากระบบ</span>
       </button>
     </Screen>
   );
